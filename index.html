@@ -190,6 +190,7 @@ const SIG = p => p>0?"+":"";
 const BADGE = { "强势持有":'b-s', "加仓区":'b-a', "观望":'b-w', "反弹乏力-减仓":'b-r' };
 const DCOL = { "强势持有":"#22c55e", "加仓区":"#38bdf8", "观望":"#f59e0b", "反弹乏力-减仓":"#ef4444" };
 
+function renderKpis(){
 const kpiBox = document.getElementById("kpis");
 const kpis = [
   {l:"总市值", v:FMT(META.totalMv)+" 元", c: CLS(META.totalPl), n:"个股 117.8万 + ETF 35.0万"},
@@ -200,6 +201,8 @@ const kpis = [
 ];
 kpiBox.innerHTML = kpis.map(k=>`<div class="kpi"><div class="lbl">${k.l}</div><div class="val ${k.c}">${k.v}</div><div class="note">${k.n}</div></div>`).join("");
 
+}
+renderKpis();
 const statBox = document.getElementById("stats");
 const order = ["强势持有","加仓区","观望","反弹乏力-减仓"];
 statBox.innerHTML = order.map(s=>{
