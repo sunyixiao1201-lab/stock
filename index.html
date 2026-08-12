@@ -361,8 +361,8 @@ tbody.addEventListener("click",e=>{
   else if(el) { el.textContent = "🕐 数据更新: —"; }
 })();
 
-// 手动刷新：实时获取行情数据刷新页面
-async function manualRefresh(){
+// 手动刷新：JSONP方式获取腾讯行情数据，避免CORS问题
+function manualRefresh(){
   const btn = document.getElementById("btnRefresh");
   const utEl = document.getElementById("updateTime");
   btn.disabled = true; btn.textContent = "⏳ 更新中...";
@@ -373,43 +373,60 @@ async function manualRefresh(){
       if(m==="SH") return "sh" + n;
       return "sz" + n;
     });
-    const url = "https://qt.gtimg.cn/q=" + codes.join(",");
-    const resp = await fetch("https://api.allorigins.win/raw?url=" + encodeURIComponent(url));
-    const buf = await resp.arrayBuffer();
-    const text = new TextDecoder("gbk").decode(buf);
-    const quoteMap = {};
-    for(const line of text.split(";")){
-      const m2 = line.match(/v_([a-z0-9]+)="([^"]*)"/);
-      if(!m2) continue;
-      const f = m2[2].split("~");
-      quoteMap[m2[1]] = { price:parseFloat(f[3]), chgPct:parseFloat(f[32]) };
-    }
-    let totalMv = 0, totalPl = 0;
-    H.forEach(h => {
-      const [n,m2] = h.code.split(".");
-      let qt = m2==="HK"?"hk"+n.padStart(5,"0"):m2==="SH"?"sh"+n:"sz"+n;
-      const q = quoteMap[qt];
-      if(!q || !q.price) return;
-      h.px = Math.round(q.price*100)/100;
-      h.lastPx = h.px;
-      h.mv = Math.round(h.shares * h.px);
-      h.pl = Math.round(h.shares * (h.px - h.cost));
-      h.plPct = Math.round((h.px - h.cost)/h.cost*1000)/10;
-      totalMv += h.mv;
-      totalPl += h.pl;
-    });
-    META.totalMv = totalMv;
-    META.totalPl = totalPl;
-    const now = new Date();
-    const timeStr = now.getFullYear()+"/"+String(now.getMonth()+1).padStart(2,"0")+"/"+String(now.getDate()).padStart(2,"0")+" "+String(now.getHours()).padStart(2,"0")+":"+String(now.getMinutes()).padStart(2,"0")+":"+String(now.getSeconds()).padStart(2,"0");
-    META.updateTime = timeStr;
-    renderKpis();
-    renderTable();
-    if(utEl) utEl.textContent = "🕐 数据更新: " + timeStr;
-    btn.textContent = "✅ 已更新";
-    setTimeout(()=>{ btn.textContent = "🔄 手动更新"; btn.disabled = false; }, 2000);
+    const script = document.createElement("script");
+    script.charset = "GBK";
+    script.src = "https://qt.gtimg.cn/q=" + codes.join(",");
+    script.onload = function(){
+      try {
+        const quoteMap = {};
+        codes.forEach(c => {
+          const varName = "v_" + c;
+          if(window[varName]){
+            const f = window[varName].split("~");
+            quoteMap[c] = { price:parseFloat(f[3]), chgPct:parseFloat(f[32]) };
+            try { delete window[varName]; } catch(ex){}
+          }
+        });
+        let totalMv = 0, totalPl = 0;
+        H.forEach(h => {
+          const [n,m2] = h.code.split(".");
+          let qt = m2==="HK"?"hk"+n.padStart(5,"0"):m2==="SH"?"sh"+n:"sz"+n;
+          const q = quoteMap[qt];
+          if(!q || !q.price) return;
+          h.px = Math.round(q.price*100)/100;
+          h.lastPx = h.px;
+          h.mv = Math.round(h.shares * h.px);
+          h.pl = Math.round(h.shares * (h.px - h.cost));
+          h.plPct = Math.round((h.px - h.cost)/h.cost*1000)/10;
+          totalMv += h.mv;
+          totalPl += h.pl;
+        });
+        META.totalMv = totalMv;
+        META.totalPl = totalPl;
+        const now = new Date();
+        const timeStr = now.getFullYear()+"/"+String(now.getMonth()+1).padStart(2,"0")+"/"+String(now.getDate()).padStart(2,"0")+" "+String(now.getHours()).padStart(2,"0")+":"+String(now.getMinutes()).padStart(2,"0")+":"+String(now.getSeconds()).padStart(2,"0");
+        META.updateTime = timeStr;
+        renderKpis();
+        renderTable();
+        if(utEl) utEl.textContent = "🕒 数据更新: " + timeStr;
+        btn.textContent = "✅ 已更新";
+        setTimeout(()=>{ btn.textContent = "🔄 手动更新"; btn.disabled = false; }, 2000);
+      } catch(err){
+        console.error("解析行情数据失败:", err);
+        btn.textContent = "❌ 更新失败";
+        setTimeout(()=>{ btn.textContent = "🔄 手动更新"; btn.disabled = false; }, 2000);
+      }
+      document.head.removeChild(script);
+    };
+    script.onerror = function(){
+      console.error("加载行情数据失败");
+      btn.textContent = "❌ 更新失败";
+      setTimeout(()=>{ btn.textContent = "🔄 手动更新"; btn.disabled = false; }, 2000);
+      document.head.removeChild(script);
+    };
+    document.head.appendChild(script);
   } catch(e) {
-    console.error("手动更新失败:", e);
+    console.error("手动更新异常:", e);
     btn.textContent = "❌ 更新失败";
     setTimeout(()=>{ btn.textContent = "🔄 手动更新"; btn.disabled = false; }, 2000);
   }
