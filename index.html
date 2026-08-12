@@ -9,7 +9,7 @@
   --bg:#0b1020; --card:#141b30; --card2:#1a2340; --line:#253052;
   --txt:#e9edf6; --mut:#8b95ad; --blue:#4f8cff; --cyan:#38bdf8;
   --green:#22c55e; --red:#ef4444; --amber:#f59e0b;
-  --strong:#22c55e; --add:#38bdf8; --watch:#f59e0b; --reduce:#ef4444;
+  --strong:#ef4444; --add:#ff7875; --watch:#f59e0b; --reduce:#22c55e;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--txt);font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;font-size:14px;line-height:1.5}
@@ -50,17 +50,17 @@ tbody tr.detail-row{display:none}
 tbody tr.detail-row.open{display:table-row}
 .badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
 .badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
-.b-s{background:rgba(34,197,94,.13);color:var(--strong);border:1px solid rgba(34,197,94,.35)}
+.b-s{background:rgba(239,68,68,.13);color:var(--strong);border:1px solid rgba(239,68,68,.35)}
 .b-a{background:rgba(56,189,248,.13);color:var(--add);border:1px solid rgba(56,189,248,.35)}
 .b-w{background:rgba(245,158,11,.13);color:var(--watch);border:1px solid rgba(245,158,11,.35)}
-.b-r{background:rgba(239,68,68,.13);color:var(--reduce);border:1px solid rgba(239,68,68,.35)}
+.b-r{background:rgba(34,197,94,.13);color:var(--reduce);border:1px solid rgba(34,197,94,.35)}
 .name{font-weight:600}
 .code{color:var(--mut);font-size:11.5px;margin-top:2px}
 .up{color:var(--red)} .down{color:var(--green)} .flat{color:var(--txt)}
 .mbar{display:inline-flex;align-items:center;gap:8px}
 .mbar .track{width:74px;height:7px;background:#233056;border-radius:5px;overflow:hidden;display:inline-block}
-.mbar .fill{height:100%;border-radius:5px;background:linear-gradient(90deg,#38bdf8,#22c55e)}
-.mbar .fill.low{background:linear-gradient(90deg,#f59e0b,#ef4444)}
+.mbar .fill{height:100%;border-radius:5px;background:linear-gradient(90deg,#f59e0b,#ef4444)}
+.mbar .fill.low{background:linear-gradient(90deg,#38bdf8,#22c55e)}
 .mbar .fill.mid{background:linear-gradient(90deg,#38bdf8,#f59e0b)}
 .mbar span{font-weight:700;font-size:12.5px;min-width:26px}
 .range{font-variant-numeric:tabular-nums}
@@ -188,7 +188,7 @@ const F2S = n => n==null||isNaN(n)?"—":(n>0?"+":"")+Number(n).toFixed(1)+"%";
 const CLS = p => p>0?"up":p<0?"down":"flat";
 const SIG = p => p>0?"+":"";
 const BADGE = { "强势持有":'b-s', "加仓区":'b-a', "观望":'b-w', "反弹乏力-减仓":'b-r' };
-const DCOL = { "强势持有":"#22c55e", "加仓区":"#38bdf8", "观望":"#f59e0b", "反弹乏力-减仓":"#ef4444" };
+const DCOL = { "强势持有":"#ef4444", "加仓区":"#ff7875", "观望":"#f59e0b", "反弹乏力-减仓":"#22c55e" };
 
 function renderKpis(){
 const kpiBox = document.getElementById("kpis");
