@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>持仓数据看板</title>
 <style>
-:root{--bg:#d0d9e6;--card:#dce4ef;--card2:#d4dde9;--line:#bcc6d4;--txt:#1f2937;--mut:#6b7280;--blue:#2563eb;--cyan:#0891b2;--green:#16a34a;--red:#dc2626;--amber:#d97706;--strong:#dc2626;--add:#0891b2;--watch:#d97706;--reduce:#16a34a}
+:root{--bg:#0f1724;--card:#1a2538;--card2:#162033;--line:#2a3a52;--txt:#e2e8f0;--mut:#94a3b8;--blue:#2563eb;--cyan:#0891b2;--green:#16a34a;--red:#dc2626;--amber:#d97706;--strong:#dc2626;--add:#0891b2;--watch:#d97706;--reduce:#16a34a}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--txt);font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;font-size:14px;line-height:1.5}
 .wrap{max-width:1500px;margin:0 auto;padding:18px 22px 60px}
@@ -13,7 +13,7 @@ body{background:var(--bg);color:var(--txt);font-family:"PingFang SC","Microsoft 
 .hd h1{font-size:24px;font-weight:700;letter-spacing:1px}
 .hd h1 em{font-style:normal;color:var(--blue)}
 .hd .sub{color:var(--mut);font-size:12.5px;margin-top:6px}
-.hd .date{background:linear-gradient(135deg,#d0daf0,#bfcce6);border:1px solid #9fb3d4;color:#2c3e5a;padding:8px 14px;border-radius:10px;font-weight:600;font-size:13px}
+.hd .date{background:linear-gradient(135deg,#1e2d44,#162438);border:1px solid #2a3a52;color:#e2e8f0;padding:8px 14px;border-radius:10px;font-weight:600;font-size:13px}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
 .kpi{background:linear-gradient(160deg,var(--card),var(--card2));border:1px solid var(--line);border-radius:14px;padding:14px 16px}
 .kpi .lbl{color:var(--mut);font-size:12px;margin-bottom:6px}
@@ -34,10 +34,10 @@ body{background:var(--bg);color:var(--txt);font-family:"PingFang SC","Microsoft 
 .toolbar .ttl{font-size:15px;font-weight:700;margin-right:8px}
 .fbtn{border:1px solid var(--line);background:var(--card);color:var(--mut);padding:6px 14px;border-radius:20px;cursor:pointer;font-size:12.5px;transition:.15s}
 .fbtn:hover{color:var(--txt);border-color:#8fa3c4}
-.fbtn.on{background:#c4d4f0;color:#1e3a5f;border-color:#6b9fd8}
+.fbtn.on{background:#2563eb;color:#ffffff;border-color:#3b82f6}
 .tbl-wrap{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 table{width:100%;border-collapse:collapse;font-size:13px}
-thead th{background:#d0d8e5;color:var(--mut);font-weight:600;font-size:12px;padding:10px 10px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:2}
+thead th{background:#1a2538;color:var(--mut);font-weight:600;font-size:12px;padding:10px 10px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:2}
 tbody td{padding:10px 10px;border-bottom:1px solid #cdd4df;white-space:nowrap;vertical-align:middle}
 tbody tr{transition:background .12s}
 tbody tr.main:hover{background:#dce2ed;cursor:pointer}
@@ -81,7 +81,7 @@ tbody tr.detail-row.open{display:table-row}
 .cat-def{background:linear-gradient(135deg,#52c41a22,#52c41a11);color:#52c41a;border:1px solid #52c41a44}
 </style>
 </head>
-<body style="background:#d0d9e6">
+<body style="background:#0f1724">
 <div class="wrap">
   <div class="hd">
     <div>
