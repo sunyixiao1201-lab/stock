@@ -100,7 +100,7 @@ tbody tr.detail-row.open{display:table-row}
 
   <div class="charts">
     <div class="chart-card"><h3>市值结构（按持仓市值）</h3><div class="chart-box" id="cAlloc"></div></div>
-    <div class="chart-card"><h3>持仓浮动盈亏（元）</h3><div class="chart-box" id="cPnl"></div></div>
+    <div class="chart-card"><h3>当日浮动盈余（元）</h3><div class="chart-box" id="cPnl"></div></div>
     <div class="chart-card"><h3>动能评分（0-10）</h3><div class="chart-box" id="cMom"></div></div>
   </div>
 
@@ -196,7 +196,7 @@ function renderKpis(){
 const kpiBox = document.getElementById("kpis");
 const kpis = [
   {l:"总市值", v:FMT(META.totalMv)+" 元", c: CLS(META.totalPl), n:"个股 117.8万 + ETF 35.0万"},
-  {l:"浮动盈亏", v:(META.totalPl>=0?"+":"")+FMT(META.totalPl)+" 元", c: CLS(META.totalPl), n:"较 8/6 的 -2.3万 大幅收敛"},
+  {l:"当日浮动盈余", v:(META.totalPl>=0?"+":"")+FMT(META.totalPl)+" 元", c: CLS(META.totalPl), n:"较 8/6 的 -2.3万 大幅收敛"},
   {l:"仓位数量", v:H.length+" 只", c:"flat", n:"个股 12 + ETF 6"},
   {l:"当日净回笼", v:"-4.36万", c:"down", n:"8/13 买3卖2 净流出"},
   {l:"累计净回笼", v:"+15.99万", c:"up", n:"7/31 以来"}
