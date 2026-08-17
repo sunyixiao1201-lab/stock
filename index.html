@@ -185,7 +185,13 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
 const META = DATA.meta, H = DATA.holdings;
 // compute initial daily P&L from hist
 META.totalDayPl = H.reduce((sum, h) => {
-  const prev = h.hist && h.hist.length>=2 ? h.hist[h.hist.length-2][1] : h.px;
+  const dataDate = META.date;
+  const lastHist = h.hist && h.hist.length>=1 ? h.hist[h.hist.length-1] : null;
+  let prev = h.px;
+  if(lastHist && h.hist.length>=2) {
+    if(lastHist[0] === dataDate.slice(5)) { prev = h.hist[h.hist.length-2][1]; }
+    else { prev = lastHist[1]; }
+  }
   return sum + Math.round(h.shares * (h.px - prev));
 }, 0);
 const FMT = n => n==null||isNaN(n) ? "—" : (Math.abs(n)>=10000 ? (n/10000).toFixed(2)+"万" : n.toLocaleString("zh-CN"));
@@ -392,7 +398,7 @@ function manualRefresh(){
           const varName = "v_" + c;
           if(window[varName]){
             const f = window[varName].split("~");
-            quoteMap[c] = { price:parseFloat(f[3]), chgPct:parseFloat(f[32]) };
+            quoteMap[c] = { price:parseFloat(f[3]), prevClose:parseFloat(f[4]), chgPct:parseFloat(f[32]) };
             try { delete window[varName]; } catch(ex){}
           }
         });
@@ -409,7 +415,7 @@ function manualRefresh(){
           h.plPct = Math.round((h.px - h.cost)/h.cost*1000)/10;
           totalMv += h.mv;
           totalPl += h.pl;
-          const prevClose = h.hist && h.hist.length>=2 ? h.hist[h.hist.length-2][1] : h.px;
+          const prevClose = q.prevClose || h.px;
           totalDayPl += Math.round(h.shares * (h.px - prevClose));
         });
         META.totalMv = totalMv;
