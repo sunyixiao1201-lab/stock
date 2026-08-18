@@ -254,7 +254,7 @@ const dark = { textStyle:{color:"#5a6b82"} };
     grid:{left:10,right:30,top:10,bottom:6,containLabel:true},
     xAxis:{type:"value", axisLabel:{color:"#5a6b82",fontSize:10,formatter:v=>v/10000+"万"}, splitLine:{lineStyle:{color:"#cdd4df"}}},
     yAxis:{type:"category", data:sorted.map(x=>x.name.split("ETF")[0]), axisLabel:{color:"#aab4cc",fontSize:10.5}},
-    series:[{type:"bar", barWidth:"62%", data:sorted.map(x=>({value:x.pl,itemStyle:{color:x.pl>=0?"#22c55e":"#ef4444",borderRadius:x.pl>=0?[0,4,4,0]:[4,0,0,4]}}))}]
+    series:[{type:"bar", barWidth:"62%", data:sorted.map(x=>({value:x.pl,itemStyle:{color:x.pl>=0?"#ef4444":"#22c55e",borderRadius:x.pl>=0?[0,4,4,0]:[4,0,0,4]}}))}]
   },dark));
   window.addEventListener("resize",()=>c.resize());
 })();
