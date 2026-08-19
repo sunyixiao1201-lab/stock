@@ -289,7 +289,7 @@ function rowHTML(x){
     <td><span class="badge ${BADGE[x.status]}">${x.status}</span></td>
     <td><span class="cat-badge ${x.category==='进攻'?'cat-off':'cat-def'}">${x.category||"—"}</span><br><span style="font-size:10px;color:#6b7a8f">${x.categoryTag||""}</span></td>
     <td><div class="name">${x.name}</div><div class="code">${x.code}</div></td>
-    <td class="flat"><b>${NUM(x.px)}</b>${lastNote}</td>
+    <td class="flat"><b>${NUM(x.px)}</b>${x.dayChg!=null?`<span style="margin-left:6px;font-size:11.5px;font-weight:600" class="${x.dayChg>0?'up':x.dayChg<0?'down':'flat'}">${x.dayChg>0?'+':''}${x.dayChg.toFixed(2)}%</span>`:''}${lastNote}</td>
     <td>${NUM(x.cost)}</td>
     <td class="${CLS(x.pl)}"><b>${SIG(x.plPct)}${x.plPct}%</b><br><span style="font-size:11px;color:#6b7a8f">${x.pl>=0?"+":""}${FMT(x.pl)}</span></td>
     <td><span class="mbar"><span class="track"><span class="fill ${momCls}" style="width:${x.momentum*10}%"></span></span><span>${x.momentum}</span></span></td>
@@ -413,6 +413,7 @@ function manualRefresh(){
           const q = quoteMap[qt];
           if(!q || !q.price) return;
           h.px = Math.round(q.price*100)/100;
+          h.dayChg = (q.chgPct!=null && !isNaN(q.chgPct)) ? Math.round(q.chgPct*100)/100 : null;
           h.lastPx = h.px;
           h.mv = Math.round(h.shares * h.px);
           h.pl = Math.round(h.shares * (h.px - h.cost));
