@@ -698,6 +698,9 @@ function manualRefresh(){
           totalDayPl += Math.round(h.shares * (h.px - prevClose));
         });
         recalcAll();
+        H.forEach(x => { x.status = autoStatus(x); });
+        META.statusCounts = {};
+        H.forEach(x => { META.statusCounts[x.status] = (META.statusCounts[x.status]||0) + 1; });
         META.totalMv = totalMv;
         META.totalPl = totalPl;
         META.totalDayPl = totalDayPl;
