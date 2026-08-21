@@ -338,6 +338,28 @@ function renderTable(){
   const list = curFilter==="all" ? H : curFilter.startsWith("cat-") ? H.filter(x=>x.category===curFilter.slice(4)) : H.filter(x=>x.status===curFilter);
   tbody.innerHTML = list.map(rowHTML).join("");
 }
+function calcTrend(h){
+  const ind=h.ind; if(!ind) return h.trend||"—";
+  const{ma5,ma10,ma20,ma60}=ind;
+  if(h.trend==="次新强势"||h.trend==="新建仓") return h.trend;
+  if(!ma5||!ma10||!ma20) return h.trend||"—";
+  if(ma60){
+    if(ma5>ma10&&ma10>ma20&&ma20>ma60) return "多头排列";
+    if(ma5<ma10&&ma10<ma20&&ma20<ma60) return "空头趋势";
+    if(ma5>ma10&&ma10>ma20&&ma60>ma5) return "震荡修复";
+    if(ma5<ma10&&ma10<ma20&&ma60<ma20) return "弱势整理";
+    const spread=Math.abs(ma5-ma60)/ma60;
+    if(spread<0.02) return "横盘整理";
+    if(ma5>ma10&&ma10>ma20) return "震荡修复";
+    if(ma5<ma10&&ma10<ma20) return "弱势整理";
+    return "震荡整理";
+  }
+  if(ma5>ma10&&ma10>ma20) return "短期多头";
+  if(ma5<ma10&&ma10<ma20) return "短期空头";
+  return "震荡整理";
+}
+function updateAllTrends(){ H.forEach(h=>{ h.trend=calcTrend(h); }); }
+updateAllTrends();
 function drawSpark(el, x){
   const c = echarts.init(el);
   const dates = x.hist.map(h=>h[0]);
@@ -424,6 +446,7 @@ function manualRefresh(){
           const prevClose = q.prevClose || h.px;
           totalDayPl += Math.round(h.shares * (h.px - prevClose));
         });
+        updateAllTrends();
         META.totalMv = totalMv;
         META.totalPl = totalPl;
         META.totalDayPl = totalDayPl;
