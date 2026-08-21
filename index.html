@@ -338,6 +338,7 @@ function renderTable(){
   const list = curFilter==="all" ? H : curFilter.startsWith("cat-") ? H.filter(x=>x.category===curFilter.slice(4)) : H.filter(x=>x.status===curFilter);
   tbody.innerHTML = list.map(rowHTML).join("");
 }
+// === 自动趋势计算 ===
 function calcTrend(h){
   const ind=h.ind; if(!ind) return h.trend||"—";
   const{ma5,ma10,ma20,ma60}=ind;
@@ -358,8 +359,207 @@ function calcTrend(h){
   if(ma5<ma10&&ma10<ma20) return "短期空头";
   return "震荡整理";
 }
-function updateAllTrends(){ H.forEach(h=>{ h.trend=calcTrend(h); }); }
-updateAllTrends();
+// === 技术指标计算引擎 ===
+function calcIndicators(hist) {
+  if (!hist || hist.length < 5) return null;
+  const closes = hist.map(h => h[1]);
+  const len = closes.length;
+  
+  // SMA
+  function sma(arr, period) {
+    if (arr.length < period) return null;
+    let sum = 0;
+    for (let i = arr.length - period; i < arr.length; i++) sum += arr[i];
+    return +(sum / period).toFixed(4);
+  }
+  
+  // EMA
+  function ema(arr, period) {
+    if (arr.length < period) return null;
+    const k = 2 / (period + 1);
+    let e = arr[0];
+    for (let i = 1; i < arr.length; i++) e = arr[i] * k + e * (1 - k);
+    return +e.toFixed(4);
+  }
+  
+  // MACD (12,26,9)
+  function macd(arr) {
+    if (arr.length < 26) return { dif: null, dea: null, hist: null };
+    const k12 = 2/13, k26 = 2/27, k9 = 2/10;
+    let ema12 = arr[0], ema26 = arr[0], dea = 0;
+    let dif = 0;
+    for (let i = 1; i < arr.length; i++) {
+      ema12 = arr[i] * k12 + ema12 * (1 - k12);
+      ema26 = arr[i] * k26 + ema26 * (1 - k26);
+      dif = ema12 - ema26;
+      dea = dif * k9 + dea * (1 - k9);
+    }
+    return { dif: +dif.toFixed(4), dea: +dea.toFixed(4), hist: +((dif - dea) * 2).toFixed(4) };
+  }
+  
+  // RSI
+  function rsi(arr, period) {
+    if (arr.length < period + 1) return null;
+    let gains = 0, losses = 0;
+    for (let i = arr.length - period; i < arr.length; i++) {
+      const chg = arr[i] - arr[i - 1];
+      if (chg > 0) gains += chg; else losses -= chg;
+    }
+    if (losses === 0) return 100;
+    const rs = gains / losses;
+    return +(100 - 100 / (1 + rs)).toFixed(2);
+  }
+  
+  // Bollinger Bands (20,2)
+  function boll(arr, period=20, mult=2) {
+    if (arr.length < period) return { up: null, mid: null, low: null };
+    const slice = arr.slice(-period);
+    const mid = slice.reduce((a, b) => a + b, 0) / period;
+    const std = Math.sqrt(slice.reduce((a, b) => a + (b - mid) ** 2, 0) / period);
+    return { up: +(mid + mult * std).toFixed(4), mid: +mid.toFixed(4), low: +(mid - mult * std).toFixed(4) };
+  }
+  
+  // ATR (14)
+  function atr(hist, period=14) {
+    if (hist.length < period + 1) return null;
+    const closes = hist.map(h => h[1]);
+    let tr_sum = 0;
+    for (let i = hist.length - period; i < hist.length; i++) {
+      const hi = closes[i], lo = closes[i], prevC = closes[i-1];
+      const tr = Math.max(hi - lo, Math.abs(hi - prevC), Math.abs(lo - prevC));
+      tr_sum += tr;
+    }
+    return +(tr_sum / period).toFixed(4);
+  }
+  
+  // Volume ratio (last 5 avg / prev 5 avg) - not available without volume data
+  // ROC
+  function roc(arr, period) {
+    if (arr.length <= period) return null;
+    const prev = arr[arr.length - 1 - period];
+    return prev === 0 ? null : +((arr[arr.length - 1] - prev) / prev * 100).toFixed(2);
+  }
+  
+  const ma5 = sma(closes, 5);
+  const ma10 = sma(closes, 10);
+  const ma20 = sma(closes, 20);
+  const ma60 = sma(closes, 60);
+  const m = macd(closes);
+  const rsi6 = rsi(closes, 6);
+  const rsi12 = rsi(closes, 12);
+  const rsi24 = rsi(closes, 24);
+  const b = boll(closes, 20, 2);
+  const roc5 = roc(closes, 5);
+  const roc10 = roc(closes, 10);
+  const roc20 = roc(closes, 20);
+  
+  return {
+    ma5, ma10, ma20, ma60,
+    dif: m.dif, dea: m.dea, hist: m.hist,
+    rsi6, rsi12, rsi24,
+    bollUp: b.up, bollMid: b.mid, bollLow: b.low,
+    roc5, roc10, roc20
+  };
+}
+
+// === 动能评分 (0-10) ===
+function calcMomentum(ind) {
+  if (!ind || !ind.ma5) return 5;
+  let score = 5; // baseline
+  // 均线多头加分
+  if (ind.ma5 > ind.ma10) score += 0.8;
+  if (ind.ma10 > ind.ma20) score += 0.8;
+  if (ind.ma20 && ind.ma60 && ind.ma20 > ind.ma60) score += 0.8;
+  // 均线空头扣分
+  if (ind.ma5 < ind.ma10) score -= 0.8;
+  if (ind.ma10 < ind.ma20) score -= 0.8;
+  if (ind.ma20 && ind.ma60 && ind.ma20 < ind.ma60) score -= 0.8;
+  // MACD 加分
+  if (ind.dif > 0 && ind.dif > ind.dea) score += 1;
+  else if (ind.dif > ind.dea) score += 0.5;
+  else if (ind.dif < ind.dea) score -= 0.8;
+  // RSI
+  if (ind.rsi6 > 60) score += 0.5;
+  if (ind.rsi6 > 70) score += 0.3;
+  if (ind.rsi6 < 40) score -= 0.5;
+  if (ind.rsi6 < 30) score -= 0.3;
+  // ROC 动量
+  if (ind.roc5 > 3) score += 0.5;
+  if (ind.roc5 < -3) score -= 0.5;
+  return Math.max(0, Math.min(10, +score.toFixed(1)));
+}
+
+// === 买卖点/目标价/止损 自动推导 ===
+function calcLevels(ind, trend, px) {
+  if (!ind || !ind.bollUp) return {};
+  const lv = {};
+  lv.r1 = ind.bollUp;    // 上轨=压力1
+  lv.r2 = ind.bollUp;    // 压力2
+  lv.s1 = ind.bollLow;   // 下轨=支撑1
+  lv.s2 = ind.bollLow;   // 支撑2
+  
+  if (trend === "多头排列" || trend === "震荡修复" || trend === "短期多头") {
+    // 上涨趋势：回踩MA20/布林中轨为买点
+    lv.buyLow = ind.bollLow;
+    lv.buyHigh = ind.bollMid;
+    lv.addLow = ind.bollLow;
+    lv.addHigh = ind.bollMid;
+    lv.target = ind.bollUp;
+    lv.stop = +(ind.bollLow * 0.97).toFixed(2);
+    lv.reduceLow = ind.bollMid;
+    lv.reduceHigh = ind.bollUp;
+    lv.sellNote = "回踩 " + ind.bollLow.toFixed(2) + "~" + ind.bollMid.toFixed(2) + " 可加仓，反弹至 " + ind.bollMid.toFixed(2) + "~" + ind.bollUp.toFixed(2) + " 分批止盈";
+  } else if (trend === "弱势整理" || trend === "空头趋势") {
+    // 下跌趋势：不建议买入，设减仓区间
+    lv.buyLow = null;
+    lv.buyHigh = null;
+    lv.addLow = null;
+    lv.addHigh = null;
+    lv.target = ind.bollMid;
+    lv.stop = +(ind.bollLow * 0.97).toFixed(2);
+    lv.reduceLow = ind.bollMid;
+    lv.reduceHigh = ind.bollUp;
+    lv.sellNote = "反弹至 " + ind.bollMid.toFixed(2) + "~" + ind.bollUp.toFixed(2) + " 区间分批减仓";
+  } else {
+    // 横盘/震荡：高抛低吸
+    lv.buyLow = ind.bollLow;
+    lv.buyHigh = ind.bollMid;
+    lv.addLow = ind.bollLow;
+    lv.addHigh = ind.bollMid;
+    lv.target = ind.bollUp;
+    lv.stop = +(ind.bollLow * 0.95).toFixed(2);
+    lv.reduceLow = ind.bollMid;
+    lv.reduceHigh = ind.bollUp;
+    lv.sellNote = "区间操作，低吸 " + ind.bollLow.toFixed(2) + " 附近，高抛 " + ind.bollUp.toFixed(2) + " 附近";
+  }
+  return lv;
+}
+
+// === 主更新函数 ===
+function recalcAll() {
+  H.forEach(h => {
+    if (!h.hist || h.hist.length < 5) return;
+    // 如果实时价格与hist最后一条不同，临时追加用于计算
+    let calcHist = h.hist;
+    if (h.px && h.hist.length > 0) {
+      const lastEntry = h.hist[h.hist.length - 1];
+      if (Math.abs(lastEntry[1] - h.px) > 0.001) {
+        calcHist = h.hist.concat([["latest", h.px]]);
+      }
+    }
+    const newInd = calcIndicators(calcHist);
+    if (newInd) {
+      h.ind = newInd;
+      const _origTrend = h.trend;
+      h.trend = calcTrend(h);
+      // 如果calcTrend返回原值(数据不全时),保留原始趋势
+      if (!h.trend || h.trend === "—") h.trend = _origTrend;
+      h.momentum = calcMomentum(newInd);
+      h.lv = calcLevels(newInd, h.trend, h.px);
+    }
+  });
+}
+recalcAll();
 function drawSpark(el, x){
   const c = echarts.init(el);
   const dates = x.hist.map(h=>h[0]);
@@ -446,7 +646,7 @@ function manualRefresh(){
           const prevClose = q.prevClose || h.px;
           totalDayPl += Math.round(h.shares * (h.px - prevClose));
         });
-        updateAllTrends();
+        recalcAll();
         META.totalMv = totalMv;
         META.totalPl = totalPl;
         META.totalDayPl = totalDayPl;
