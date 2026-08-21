@@ -231,9 +231,6 @@ function autoStatus(x) {
   if (score >= 2) return "观望";
   return "反弹乏力-减仓";
 }
-H.forEach(x => { x.status = autoStatus(x); });
-META.statusCounts = {};
-H.forEach(x => { META.statusCounts[x.status] = (META.statusCounts[x.status]||0) + 1; });
 // === END 自动状态判定 ===
 // compute initial daily P&L from hist
 META.totalDayPl = H.reduce((sum, h) => {
@@ -611,6 +608,9 @@ function recalcAll() {
   });
 }
 recalcAll();
+H.forEach(x => { x.status = autoStatus(x); });
+META.statusCounts = {};
+H.forEach(x => { META.statusCounts[x.status] = (META.statusCounts[x.status]||0) + 1; });
 function drawSpark(el, x){
   const c = echarts.init(el);
   const dates = x.hist.map(h=>h[0]);
