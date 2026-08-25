@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>持仓复盘与交易策略 2026-08-25</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#0f1419; color:#e1e8ed; line-height:1.6; padding:20px; }
+.container { max-width:1200px; margin:0 auto; }
+h1 { text-align:center; font-size:1.8rem; margin-bottom:8px; background:linear-gradient(135deg,#667eea,#764ba2); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.subtitle { text-align:center; color:#8899a6; margin-bottom:24px; font-size:0.9rem; }
+.card { background:#1c2938; border-radius:12px; padding:20px; margin-bottom:16px; border:1px solid #2d3e50; }
+.card h2 { font-size:1.2rem; margin-bottom:12px; color:#1da1f2; border-bottom:1px solid #2d3e50; padding-bottom:8px; }
+.card h3 { font-size:1rem; margin:12px 0 8px; color:#ffad1f; }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+@media(max-width:768px) { .grid2,.grid3 { grid-template-columns:1fr; } }
+.stat-box { background:#15202b; border-radius:8px; padding:12px; text-align:center; }
+.stat-box .label { font-size:0.75rem; color:#8899a6; }
+.stat-box .value { font-size:1.4rem; font-weight:bold; margin-top:4px; }
+.positive { color:#17bf63; }
+.negative { color:#e0245e; }
+.neutral { color:#ffad1f; }
+.strong { color:#7b61ff; }
+table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+th { background:#15202b; padding:8px 6px; text-align:left; color:#8899a6; font-weight:500; }
+td { padding:8px 6px; border-bottom:1px solid #2d3e50; }
+tr:hover { background:#15202b; }
+.tag { display:inline-block; padding:2px 8px; border-radius:10px; font-size:0.7rem; font-weight:500; }
+.tag-bull { background:#17bf6320; color:#17bf63; border:1px solid #17bf6340; }
+.tag-bear { background:#e0245e20; color:#e0245e; border:1px solid #e0245e40; }
+.tag-neutral { background:#ffad1f20; color:#ffad1f; border:1px solid #ffad1f40; }
+.tag-strong { background:#7b61ff20; color:#7b61ff; border:1px solid #7b61ff40; }
+.strategy-item { background:#15202b; border-radius:8px; padding:12px; margin-bottom:8px; border-left:3px solid #1da1f2; }
+.strategy-item.sell { border-left-color:#e0245e; }
+.strategy-item.buy { border-left-color:#17bf63; }
+.strategy-item.hold { border-left-color:#ffad1f; }
+.strategy-item .title { font-weight:600; margin-bottom:4px; }
+.strategy-item .detail { font-size:0.85rem; color:#8899a6; }
+.risk-bar { height:6px; background:#2d3e50; border-radius:3px; margin-top:4px; }
+.risk-fill { height:100%; border-radius:3px; }
+.disclaimer { background:#ffad1f15; border:1px solid #ffad1f30; border-radius:8px; padding:12px; margin-top:16px; font-size:0.8rem; color:#ffad1f; text-align:center; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>持仓复盘与明日交易策略</h1>
+<p class="subtitle">2026-08-25 | 总市值 ¥151.9万 | 总盈亏 ¥-8.5万 (-5.3%)</p>
+
+<div class="card">
+<h2>🎯 市场阶段判断：防守阶段</h2>
+<div class="grid3">
+<div class="stat-box"><div class="label">强势持有</div><div class="value strong">3只</div></div>
+<div class="stat-box"><div class="label">反弹乏力-减仓</div><div class="value negative">14只</div></div>
+<div class="stat-box"><div class="label">超卖标的(RSI6&lt;30)</div><div class="value neutral">6只</div></div>
+</div>
+<p style="margin-top:12px;font-size:0.9rem;color:#8899a6;">
+<b style="color:#e0245e;">判断依据：</b>18只持仓中14只处于"反弹乏力-减仓"状态，6只RSI6超卖，多数标的跌破MA20并处于空头趋势。近5日组合平均跌幅约-4%，市场整体处于防守阶段，以控制风险、保留现金为主。
+</p>
+</div>
+
+<div class="card">
+<h2>📈 持仓结构分析</h2>
+<div class="grid2">
+<div class="stat-box"><div class="label">进攻仓位</div><div class="value">35.2%</div><div style="font-size:0.75rem;color:#8899a6;margin-top:4px;">科华数据11.6% | 游戏ETF4.8% | 川发龙蟒4.3%</div></div>
+<div class="stat-box"><div class="label">防守仓位</div><div class="value">64.8%</div><div style="font-size:0.75rem;color:#8899a6;margin-top:4px;">腾讯26.1% | 德业8.7% | 宁德7.7%</div></div>
+</div>
+<p style="margin-top:12px;font-size:0.85rem;color:#8899a6;">
+⚠️ 问题：进攻仓中科华数据(11.6%)、川发龙蟒(4.3%)均深套且空头趋势；防守仓中腾讯占比过重(26.1%)且弱势整理。建议逐步降低单一标的集中度。
+</p>
+</div>
+
+<div class="card">
+<h2>💪 强势标的（持有/加仓机会）</h2>
+<table>
+<tr><th>名称</th><th>趋势</th><th>动量</th><th>RSI6</th><th>近5日</th><th>策略</th></tr>
+<tr><td><b>C长鑫</b> 688825</td><td><span class="tag tag-strong">次新强势</span></td><td>6.0</td><td>58.8</td><td class="positive">+4.3%</td><td>持有，回踩MA10(52.45)加仓</td></tr>
+<tr><td><b>有色金属ETF</b> 516650</td><td><span class="tag tag-bull">多头排列</span></td><td>9.1</td><td>61.9</td><td class="positive">+1.5%</td><td>持有，回踩1.68~1.87加仓，1.99止盈</td></tr>
+<tr><td><b>四方精创</b> 300468</td><td><span class="tag tag-strong">中期走强</span></td><td>8.2</td><td>69.6</td><td class="positive">+9.9%</td><td>接近阻力23.45，观察突破</td></tr>
+<tr><td><b>德业股份</b> 605117</td><td><span class="tag tag-neutral">震荡修复</span></td><td>5.9</td><td>56.1</td><td class="negative">-4.2%</td><td>MACD多头，回踩93加仓，99.94止盈</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h2>⚠️ 高危标的（止损/减仓关注）</h2>
+<table>
+<tr><th>名称</th><th>盈亏%</th><th>趋势</th><th>离止损</th><th>RSI6</th><th>风险提示</th></tr>
+<tr><td><b>中概互联网ETF</b></td><td class="negative">-36.8%</td><td><span class="tag tag-bear">弱势整理</span></td><td class="negative">0.0%</td><td>26.3</td><td>已触止损1.07，必须减仓</td></tr>
+<tr><td><b>标普信息科技LOF</b></td><td class="positive">+51.1%</td><td><span class="tag tag-bear">弱势整理</span></td><td class="negative">0.1%</td><td>34.5</td><td>紧贴止损6.83，盈利保护优先</td></tr>
+<tr><td><b>腾讯控股</b></td><td class="positive">+64.6%</td><td><span class="tag tag-bear">弱势整理</span></td><td class="negative">0.5%</td><td>34.5</td><td>跌破437.6需减仓</td></tr>
+<tr><td><b>机器人ETF</b></td><td class="negative">-6.7%</td><td><span class="tag tag-bear">空头趋势</span></td><td class="negative">0.9%</td><td>27.9</td><td>5日跌-10.2%，逼近止损1.11</td></tr>
+<tr><td><b>金风科技</b></td><td class="negative">-12.0%</td><td><span class="tag tag-bear">空头趋势</span></td><td>1.6%</td><td>25.7</td><td>5日暴跌-16.9%，跌破18必须走</td></tr>
+<tr><td><b>科创50ETF</b></td><td class="negative">-5.1%</td><td><span class="tag tag-bear">空头趋势</span></td><td>1.8%</td><td>27.3</td><td>5日跌-10.5%，止损1.61近在咫尺</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h2>🎯 明日(8/26)交易策略</h2>
+<h3>🔴 优先减仓（风控第一）</h3>
+<div class="strategy-item sell">
+<div class="title">中概互联网ETF (513050) — 已触止损，开盘减仓</div>
+<div class="detail">现价1.07已触止损位，RSI6=26.3超卖但趋势恶劣。建议开盘减仓1/2~2/3仓位(约20000份)，保留观察仓。</div>
+</div>
+<div class="strategy-item sell">
+<div class="title">标普信息科技LOF (161128) — 盈利保护，跌破6.83减仓</div>
+<div class="detail">现价6.84紧贴止损6.83，账面盈利51%。若开盘跌破6.83，减仓2000份锁定利润。反弹至7.23目标位也减仓。</div>
+</div>
+<div class="strategy-item sell">
+<div class="title">腾讯控股 (0700.HK) — 跌破437.6减仓</div>
+<div class="detail">现价440，止损437.6仅0.5%距离。若跌破437.6，减100~200股。账面盈利64.6%，保护利润优先。</div>
+</div>
+<div class="strategy-item sell">
+<div class="title">机器人ETF (159213) — 跌破1.11减仓</div>
+<div class="detail">5日暴跌-10.2%，RSI超卖但趋势恶劣。跌破止损1.11减仓15000份。</div>
+</div>
+
+<h3>🟡 观察等待</h3>
+<div class="strategy-item hold">
+<div class="title">金风科技 (002202) — 超卖反弹博弈</div>
+<div class="detail">5日跌-16.9%，RSI6=25.7严重超卖。若跌破18必须走，反弹至19.5可T+0摊薄。暂不操作。</div>
+</div>
+<div class="strategy-item hold">
+<div class="title">科创50ETF (588080) — 接近止损观察</div>
+<div class="detail">5日跌-10.5%，RSI超卖。止损1.61，若继续杀跌至1.61以下果断减仓8000份。</div>
+</div>
+<div class="strategy-item hold">
+<div class="title">科华数据 (002335) — 观察企稳</div>
+<div class="detail">近5日跌-7.7%，止损29.23距1.6%。暂不操作，若跌破29.23减2000股。</div>
+</div>
+
+<h3>🟢 持有/加仓机会</h3>
+<div class="strategy-item buy">
+<div class="title">有色金属ETF (516650) — 多头趋势回踩加仓</div>
+<div class="detail">动量9.1，多头排列。今日已加仓6000份。若回踩1.87以下可继续加3000份，严格止损1.78。目标1.99。</div>
+</div>
+<div class="strategy-item buy">
+<div class="title">C长鑫 (688825) — 强势持有</div>
+<div class="detail">次新强势股，动量6.0。若回踩MA10(52.45)附近可加仓200股，止损47.23。</div>
+</div>
+<div class="strategy-item buy">
+<div class="title">四方精创 (300468) — 强势观察突破</div>
+<div class="detail">5日涨+9.9%，RSI6=69.6接近超买，阻力23.45。突破23.45站稳可持有，否则到目标位分批止盈。仓位已轻(600股)。</div>
+</div>
+<div class="strategy-item buy">
+<div class="title">德业股份 (605117) — 回踩加仓</div>
+<div class="detail">MACD多头，震荡修复中。若回踩至93附近可加仓200股，止损86.05。目标99.94。</div>
+</div>
+</div>
+
+<div class="card">
+<h2>💰 资金与仓位管理建议</h2>
+<div class="grid2">
+<div class="stat-box"><div class="label">当前总市值</div><div class="value">¥151.9万</div></div>
+<div class="stat-box"><div class="label">建议总仓位</div><div class="value neutral">50-60%</div><div style="font-size:0.7rem;color:#8899a6;margin-top:4px;">防守阶段，降低仓位控制风险</div></div>
+</div>
+<div style="margin-top:12px;font-size:0.85rem;">
+<p><b>明日操作优先级：</b></p>
+<p style="margin-top:8px;">1. <span style="color:#e0245e;">止损第一</span>：中概互联网ETF开盘减仓，标普LOF/腾讯/机器人ETF跌破止损即走</p>
+<p>2. <span style="color:#ffad1f;">利润保护</span>：标普LOF(+51%)、腾讯(+64%)盈利丰厚，宁可少赚不能回吐</p>
+<p>3. <span style="color:#17bf63;">强势加仓</span>：有色金属ETF回踩加仓，C长鑫/德业回踩可小仓位介入</p>
+<p style="margin-top:8px;color:#8899a6;">预计明日如执行减仓，可释放约4~5万现金，留待市场企稳后抄底超卖标的。</p>
+</div>
+</div>
+
+<div class="card">
+<h2>🛡️ 组合风险评估</h2>
+<div class="grid3">
+<div class="stat-box"><div class="label">组合风险评分</div><div class="value negative">7.2/10</div><div class="risk-bar"><div class="risk-fill" style="width:72%;background:linear-gradient(90deg,#ffad1f,#e0245e);"></div></div></div>
+<div class="stat-box"><div class="label">市场环境</div><div class="value negative">防守</div></div>
+<div class="stat-box"><div class="label">持仓集中度风险</div><div class="value neutral">中高</div><div style="font-size:0.7rem;color:#8899a6;margin-top:4px;">腾讯占比26.1%过重</div></div>
+</div>
+<div style="margin-top:12px;font-size:0.85rem;color:#8899a6;">
+<b>主要风险点：</b><br>
+• 14/18只标的处于减仓信号，系统性下行压力大<br>
+• 6只标的RSI超卖，短期可能有技术反弹但不改趋势<br>
+• 多只标的紧贴止损位，明日若低开可能触发连锁止损<br>
+• 深套标的（川发龙蟒-62%、上海机场-57%、四方精创-49%）拉低组合收益率
+</div>
+</div>
+
+<div class="disclaimer">⚠️ 免责声明：以上分析仅供个人投资复盘参考，不构成投资建议。投资有风险，入市需谨慎。</div>
+</div>
+</body>
+</html>
